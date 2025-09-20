@@ -1,19 +1,19 @@
-version: "3.8"
+version: '3.8'
 
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: edumanager-sqlserver
     environment:
-      - ACCEPET_EULA=Y
-      - SA_PASSWORD=EduManager@2025
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=EduManager@2024
       - MSSQL_PID=Express
     ports:
       - "1433:1433"
     volumes:
-      - sqlserver_data:/var/opt/msql
+      - sqlserver_data:/var/opt/mssql
     restart: unless-stopped
 
-  volumes:
-    sqlserver_data:
-      driver: local
+volumes:
+  sqlserver_data:
+    driver: local
