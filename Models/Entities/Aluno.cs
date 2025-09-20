@@ -16,6 +16,8 @@ namespace EduManager.Models.Entities
         public bool Ativo { get; set; } = true;
 
         public virtual ICollection<Nota> Notas { get; set; } = new List<Nota>();
+        public virtual ICollection<Frequencia> Frequencias { get; set; } = new List<Frequencia>();
+        
 
 
         // Propriedade calculada para aluno
