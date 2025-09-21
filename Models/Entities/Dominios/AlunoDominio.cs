@@ -10,7 +10,8 @@ namespace EduManager.Models.Entities.Dominios
     {
         [Key]
         public int AlunoId { get; set; }
-        public string? UserId { get; set; }
+        public int UserId { get; set; }
+        public string? NomeCompleto { get; set; }
         public DateTime DataNascimento { get; set; }
         public ApplicationUser? User { get; set; }
         public DateTime DataMatricula { get; set; }
@@ -24,7 +25,6 @@ namespace EduManager.Models.Entities.Dominios
 
 
         // Propriedade calculada para aluno
-        public string? NomeCompleto => User?.NomeCompleto;
         public int? Idade => User?.DataNascimento == null ? null : 
             (int)((DateTime.Now - User.DataNascimento).TotalDays / 365.25);
         public double? MediaNotas => Notas != null && Notas.Count > 0 ? 

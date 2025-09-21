@@ -27,6 +27,7 @@ public class EduManagerContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        ConfigurarApplicationUser(modelBuilder);
         ConfigurarAluno(modelBuilder);
         ConfigurarProfessor(modelBuilder);
         ConfigurarCurso(modelBuilder);
@@ -37,28 +38,47 @@ public class EduManagerContext : DbContext
         ConfigurarCoordenador(modelBuilder);
     }
 
+    private void ConfigurarApplicationUser(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(u => u.Nome).HasMaxLength(100);
+            entity.Property(u => u.Sobrenome).HasMaxLength(100);
+            entity.Property(u => u.CPF).HasMaxLength(11);
+            entity.Property(u => u.Telefone).HasMaxLength(20);
+            
+            // Índice único para CPF
+            entity.HasIndex(u => u.CPF).IsUnique();
+        });
+    }
     private void ConfigurarAluno(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AlunoDominio>(entity =>
         {
-             entity.ToTable("Alunos");
+            entity.ToTable("Alunos");
             entity.HasKey(a => a.AlunoId);
-            
+
             entity.Property(a => a.NomeCompleto)
                 .IsRequired()
                 .HasMaxLength(100);
-                
+
             entity.Property(a => a.Email)
                 .IsRequired()
                 .HasMaxLength(150);
-                
+
             entity.Property(a => a.CPF)
                 .IsRequired()
                 .HasMaxLength(11);
-                
+
             entity.Property(a => a.DataNascimento)
                 .IsRequired();
-                
+
+            entity.HasOne(a => a.User)
+                .WithOne(u => u.Aluno)
+                .HasForeignKey<AlunoDominio>(a => a.UserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // Índices únicos
             entity.HasIndex(a => a.Email).IsUnique();
             entity.HasIndex(a => a.CPF).IsUnique();
@@ -84,7 +104,14 @@ public class EduManagerContext : DbContext
             entity.Property(p => p.Especialidade)
                 .HasMaxLength(100);
 
+                        entity.HasOne(p => p.User)
+                .WithOne(u => u.Professor)
+                .HasForeignKey<ProfessorDominio>(p => p.UserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
             entity.HasIndex(p => p.CPF).IsUnique();
+            entity.HasIndex(p => p.UserId).IsUnique();
         });
 
     }
@@ -272,9 +299,16 @@ public class EduManagerContext : DbContext
                 .IsRequired()
                 .HasMaxLength(11);
                 
+            entity.HasOne(c => c.User)
+                .WithOne(u => u.Coordenador)
+                .HasForeignKey<CoordenadorDominio>(c => c.UserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+                
             // Índices únicos
             entity.HasIndex(c => c.Email).IsUnique();
             entity.HasIndex(c => c.CPF).IsUnique();
+            entity.HasIndex(c => c.UserId).IsUnique();
         });
     }
 }
