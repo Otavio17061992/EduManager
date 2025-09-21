@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EduManager.Models.Entities
+namespace EduManager.Models.Entities.Dominios
 {
-    public class Coordenador
+    public class CoordenadorDominio
     {
         public int CoordenadorId { get; set; }
         public string? UserId { get; set; }
@@ -14,7 +14,7 @@ namespace EduManager.Models.Entities
         public decimal Salario { get; set; }
 
         // Relacionamentos
-        public virtual ICollection<Curso> Cursos { get; set; } = new List<Curso>();
+        public virtual ICollection<CursoDominio> Cursos { get; set; } = new List<CursoDominio>();
 
         // Propriedade calculada
         public string? NomeCompleto => User?.NomeCompleto;

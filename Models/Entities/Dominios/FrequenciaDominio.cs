@@ -1,8 +1,8 @@
 using System;
 
-namespace EduManager.Models.Entities
+namespace EduManager.Models.Entities.Dominios
 {
-    public class Frequencia
+    public class FrequenciaDominio
     {
         public int FrequenciaId { get; set; }
         public int AlunoId { get; set; }
@@ -11,8 +11,8 @@ namespace EduManager.Models.Entities
         public bool Presente { get; set; }
 
         // Relacionamentos
-        public virtual Aluno? Aluno { get; set; }
-        public virtual Disciplina? Disciplina { get; set; }
+        public virtual AlunoDominio? Aluno { get; set; }
+        public virtual DisciplinaDominio? Disciplina { get; set; }
 
         // Propriedade calculada: Status da presença
         public string Status => Presente ? "Presente" : "Faltou";

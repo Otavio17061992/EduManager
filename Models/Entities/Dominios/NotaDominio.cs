@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EduManager.Models.Entities
+namespace EduManager.Models.Entities.Dominios
 {
-    public class Nota
+    public class NotaDominio
     {
         public int NotaId { get; set; }
         public int AlunoId { get; set; }
@@ -14,8 +14,8 @@ namespace EduManager.Models.Entities
         public DateTime DataLancamento { get; set; }
 
         // Relacionamentos
-        public virtual Aluno? Aluno { get; set; }
-        public virtual Disciplina? Disciplina { get; set; }
+        public virtual AlunoDominio? Aluno { get; set; }
+        public virtual DisciplinaDominio? Disciplina { get; set; }
         
         // propriedades Calculadas
         public string? Status => Valor >= 60 ? "Aprovado" : "Reprovado";

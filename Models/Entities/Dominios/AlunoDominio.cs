@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EduManager.Models.Entities
+namespace EduManager.Models.Entities.Dominios
 {
-    public class Aluno
+    public class AlunoDominio
     {
         public int AlunoId { get; set; }
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
         public DateTime DataMatricula { get; set; }
         public int CursoId { get; set; }
-        public virtual Curso? Curso { get; set; }
+        public virtual CursoDominio? Curso { get; set; }
         public bool Ativo { get; set; } = true;
 
-        public virtual ICollection<Nota> Notas { get; set; } = new List<Nota>();
-        public virtual ICollection<Frequencia> Frequencias { get; set; } = new List<Frequencia>();
-        
+        public virtual ICollection<NotaDominio> Notas { get; set; } = new List<NotaDominio>();
+        public virtual ICollection<FrequenciaDominio> Frequencias { get; set; } = new List<FrequenciaDominio>();
 
 
         // Propriedade calculada para aluno

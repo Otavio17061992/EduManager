@@ -1,7 +1,7 @@
 
-namespace EduManager.Models.Entities;
+namespace EduManager.Models.Entities.Dominios;
 
-public class Professor
+public class ProfessorDominio
 {
     public int ProfessorId { get; set; }
     public string? UserId { get; set; }
@@ -11,6 +11,6 @@ public class Professor
     public DateTime DataContratacao { get; set; }
 
     // Relacionamentos
-    public virtual ICollection<Disciplina> Disciplinas { get; set; } = new List<Disciplina>();
-    public virtual ICollection<Turma> Turmas { get; set; } = new List<Turma>();
+    public virtual ICollection<DisciplinaDominio> Disciplinas { get; set; } = new List<DisciplinaDominio>();
+    public virtual ICollection<TurmaDominio> Turmas { get; set; } = new List<TurmaDominio>();
 }

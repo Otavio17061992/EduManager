@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace EduManager.Models.Entities
+namespace EduManager.Models.Entities.Dominios
 {
-    public class Turma
+    public class TurmaDominio
     {
         public int TurmaId { get; set; }
         public string Nome { get; set; } = string.Empty;
@@ -13,10 +13,10 @@ namespace EduManager.Models.Entities
         public bool Ativa { get; set; } = true;
 
         // Relacionamentos
-        public virtual Curso? Curso { get; set; }
-        public virtual ICollection<Aluno> Alunos { get; set; } = new List<Aluno>();
-        public virtual ICollection<Disciplina> Disciplinas { get; set; } = new List<Disciplina>();
-        public virtual ICollection<Professor> Professores { get; set; } = new List<Professor>();
+        public virtual CursoDominio? Curso { get; set; }
+        public virtual ICollection<AlunoDominio> Alunos { get; set; } = new List<AlunoDominio>();
+        public virtual ICollection<DisciplinaDominio> Disciplinas { get; set; } = new List<DisciplinaDominio>();
+        public virtual ICollection<ProfessorDominio> Professores { get; set; } = new List<ProfessorDominio>();
 
         // Propriedades calculadas
         public int DuracaoDias => (DataFim - DataInicio).Days;

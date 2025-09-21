@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EduManager.Models.Entities
+namespace EduManager.Models.Entities.Dominios
 {
-    public class Curso
+    public class CursoDominio
     {
         public int CursoId { get; set; }
         public string? NomeCurso { get; set; }
@@ -15,8 +15,8 @@ namespace EduManager.Models.Entities
         public bool Ativo { get; set; } = true;
 
         // Relacionamentos
-        public virtual ICollection<Aluno> Alunos { get; set; } = new List<Aluno>();
-        public virtual ICollection<Disciplina> Disciplinas { get; set; } = new List<Disciplina>();
+        public virtual ICollection<AlunoDominio> Alunos { get; set; } = new List<AlunoDominio>();
+        public virtual ICollection<DisciplinaDominio> Disciplinas { get; set; } = new List<DisciplinaDominio>();
 
         // Propriedade calculada
         public string Status => Ativo ? "Ativo" : "Inativo";

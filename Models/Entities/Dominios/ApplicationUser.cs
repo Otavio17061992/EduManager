@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace EduManager.Models.Entities;
+namespace EduManager.Models.Entities.Dominios;
 
 public class ApplicationUser : IdentityUser
 {
@@ -13,9 +13,9 @@ public class ApplicationUser : IdentityUser
     public DateTime DataCadastro { get; set; }
 
     // Relacionamentos
-    public virtual Professor? Professor { get; set; }
-    public virtual Aluno? Aluno { get; set; }
-    public virtual Coordenador? Coordenador { get; set; }
+    public virtual ProfessorDominio? Professor { get; set; }
+    public virtual AlunoDominio? Aluno { get; set; }
+    public virtual CoordenadorDominio? Coordenador { get; set; }
 
     // Propriedades calculadas
     public string? NomeCompleto => $"{Nome} {Sobrenome}";
