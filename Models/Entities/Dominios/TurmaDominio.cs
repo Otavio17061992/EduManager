@@ -18,6 +18,10 @@ namespace EduManager.Models.Entities.Dominios
         public bool Ativa { get; set; } = true;
         public int ProfessorId { get; set; }
 
+        public virtual CursoDominio Curso { get; set; } = null!;
+        public virtual DisciplinaDominio Disciplina { get; set; } = null!;
+        public virtual ProfessorDominio Professor { get; set; } = null!;
+        public virtual ICollection<FrequenciaDominio> Frequencias { get; set; } = new List<FrequenciaDominio>();
 
         // Propriedades calculadas
         public int DuracaoDias => (DataFim - DataInicio).Days;

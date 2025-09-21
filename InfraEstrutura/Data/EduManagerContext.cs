@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EduManager.Models.Entities.Dominios;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EduManager.InfraEstrutura.Data;
 
@@ -28,14 +23,14 @@ public class EduManagerContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         ConfigurarApplicationUser(modelBuilder);
-        ConfigurarAluno(modelBuilder);
+        ConfigurarCoordenador(modelBuilder);
         ConfigurarProfessor(modelBuilder);
         ConfigurarCurso(modelBuilder);
+        ConfigurarAluno(modelBuilder);
         ConfigurarDisciplina(modelBuilder);
         ConfigurarTurma(modelBuilder);
         ConfigurarNota(modelBuilder);
         ConfigurarFrequencia(modelBuilder);
-        ConfigurarCoordenador(modelBuilder);
     }
 
     private void ConfigurarApplicationUser(ModelBuilder modelBuilder)
@@ -47,42 +42,32 @@ public class EduManagerContext : DbContext
             entity.Property(u => u.CPF).HasMaxLength(11);
             entity.Property(u => u.Telefone).HasMaxLength(20);
             
-            // Índice único para CPF
             entity.HasIndex(u => u.CPF).IsUnique();
         });
     }
-    private void ConfigurarAluno(ModelBuilder modelBuilder)
+
+    private void ConfigurarCoordenador(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AlunoDominio>(entity =>
+        modelBuilder.Entity<CoordenadorDominio>(entity =>
         {
-            entity.ToTable("Alunos");
-            entity.HasKey(a => a.AlunoId);
+            entity.ToTable("Coordenadores");
+            entity.HasKey(c => c.CoordenadorId);
+            
+            entity.Property(c => c.CoordenadorNome).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.Email).IsRequired().HasMaxLength(150);
+            entity.Property(c => c.CPF).IsRequired().HasMaxLength(11);
+            entity.Property(c => c.Salario).HasPrecision(18, 2);
+            entity.Property(c => c.UserId).HasMaxLength(450);
 
-            entity.Property(a => a.NomeCompleto)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            entity.Property(a => a.Email)
-                .IsRequired()
-                .HasMaxLength(150);
-
-            entity.Property(a => a.CPF)
-                .IsRequired()
-                .HasMaxLength(11);
-
-            entity.Property(a => a.DataNascimento)
-                .IsRequired();
-
-            entity.HasOne(a => a.User)
-                .WithOne(u => u.Aluno)
-                .HasForeignKey<AlunoDominio>(a => a.UserId)
+            entity.HasOne(c => c.User)
+                .WithOne(u => u.Coordenador)
+                .HasForeignKey<CoordenadorDominio>(c => c.UserId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            // Índices únicos
-            entity.HasIndex(a => a.Email).IsUnique();
-            entity.HasIndex(a => a.CPF).IsUnique();
-
+                
+            entity.HasIndex(c => c.Email).IsUnique();
+            entity.HasIndex(c => c.CPF).IsUnique();
+            entity.HasIndex(c => c.UserId).IsUnique();
         });
     }
 
@@ -93,18 +78,13 @@ public class EduManagerContext : DbContext
             entity.ToTable("Professores");
             entity.HasKey(p => p.ProfessorId);
 
-            entity.Property(p => p.ProfessorNome)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(p => p.ProfessorNome).IsRequired().HasMaxLength(100);
+            entity.Property(p => p.CPF).IsRequired().HasMaxLength(11);
+            entity.Property(p => p.Especialidade).HasMaxLength(100);
+            entity.Property(p => p.Salario).HasPrecision(18, 2);
+            entity.Property(p => p.UserId).HasMaxLength(450);
 
-            entity.Property(p => p.CPF)
-                .IsRequired()
-                .HasMaxLength(11);
-
-            entity.Property(p => p.Especialidade)
-                .HasMaxLength(100);
-
-                        entity.HasOne(p => p.User)
+            entity.HasOne(p => p.User)
                 .WithOne(u => u.Professor)
                 .HasForeignKey<ProfessorDominio>(p => p.UserId)
                 .IsRequired(false)
@@ -113,7 +93,6 @@ public class EduManagerContext : DbContext
             entity.HasIndex(p => p.CPF).IsUnique();
             entity.HasIndex(p => p.UserId).IsUnique();
         });
-
     }
 
     private void ConfigurarCurso(ModelBuilder modelBuilder)
@@ -122,93 +101,93 @@ public class EduManagerContext : DbContext
         {
             entity.ToTable("Cursos");
             entity.HasKey(c => c.CursoId);
-            
-            entity.Property(c => c.NomeCurso)
-                .IsRequired()
-                .HasMaxLength(100);
-                
-            entity.Property(c => c.Descricao)
-                .HasMaxLength(500);
-                
-            entity.Property(c => c.CargaHoraria)
-                .IsRequired();
-                
-            // Relacionamento com Coordenador
-            entity.HasOne<CoordenadorDominio>()
-                .WithMany()
+
+            entity.Property(c => c.NomeCurso).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.Descricao).HasMaxLength(500);
+
+            entity.HasOne(c => c.Coordenador)
+                .WithMany(coord => coord.Cursos)
                 .HasForeignKey(c => c.CoordenadorId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+    }
 
+    private void ConfigurarAluno(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AlunoDominio>(entity =>
+        {
+            entity.ToTable("Alunos");
+            entity.HasKey(a => a.AlunoId);
+            
+            entity.Property(a => a.NomeCompleto).IsRequired().HasMaxLength(100);
+            entity.Property(a => a.Email).IsRequired().HasMaxLength(150);
+            entity.Property(a => a.CPF).IsRequired().HasMaxLength(11);
+            entity.Property(a => a.DataNascimento).IsRequired();
+            entity.Property(a => a.UserId).HasMaxLength(450);
+                
+            entity.HasOne(a => a.User)
+                .WithOne(u => u.Aluno)
+                .HasForeignKey<AlunoDominio>(a => a.UserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(a => a.Curso)
+                .WithMany(c => c.Alunos)
+                .HasForeignKey(a => a.CursoId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+            entity.HasIndex(a => a.Email).IsUnique();
+            entity.HasIndex(a => a.CPF).IsUnique();
+            entity.HasIndex(a => a.UserId).IsUnique();
+        });
     }
 
     private void ConfigurarDisciplina(ModelBuilder modelBuilder)
     {
-         modelBuilder.Entity<DisciplinaDominio>(entity =>
+        modelBuilder.Entity<DisciplinaDominio>(entity =>
         {
             entity.ToTable("Disciplinas");
             entity.HasKey(d => d.DisciplinaId);
-            
-            entity.Property(d => d.Nome)
-                .IsRequired()
-                .HasMaxLength(100);
-                
-            entity.Property(d => d.Codigo)
-                .IsRequired()
-                .HasMaxLength(10);
-                
-            entity.Property(d => d.CargaHoraria)
-                .IsRequired();
-                
-            // Relacionamento com Curso
-            entity.HasOne<CursoDominio>()
-                .WithMany()
-                .HasForeignKey(d => d.CursoId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            // Relacionamento com Professor
-            entity.HasOne<ProfessorDominio>()
-                .WithMany()
+            entity.Property(d => d.Nome).IsRequired().HasMaxLength(100);
+            entity.Property(d => d.Codigo).IsRequired().HasMaxLength(10);
+
+            entity.HasOne(d => d.Professor)
+                .WithMany(p => p.Disciplinas)
                 .HasForeignKey(d => d.ProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Índice único para código
+            entity.HasOne(d => d.Curso)
+                .WithMany(c => c.Disciplinas)
+                .HasForeignKey(d => d.CursoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasIndex(d => d.Codigo).IsUnique();
         });
     }
 
     private void ConfigurarTurma(ModelBuilder modelBuilder)
     {
-                modelBuilder.Entity<TurmaDominio>(entity =>
+        modelBuilder.Entity<TurmaDominio>(entity =>
         {
             entity.ToTable("Turmas");
             entity.HasKey(t => t.TurmaId);
-            
-            entity.Property(t => t.Nome)
-                .IsRequired()
-                .HasMaxLength(50);
-                
-            entity.Property(t => t.Ano)
-                .IsRequired();
-                
-            entity.Property(t => t.Semestre)
-                .IsRequired();
-                
-            entity.Property(t => t.DataInicio)
-                .IsRequired();
-                
-            entity.Property(t => t.DataFim)
-                .IsRequired();
 
-            // Relacionamento com Disciplina
-            entity.HasOne<DisciplinaDominio>()
+            entity.Property(t => t.Nome).IsRequired().HasMaxLength(50);
+            entity.Property(t => t.Ano).HasMaxLength(10);
+
+            entity.HasOne(t => t.Curso)
                 .WithMany()
+                .HasForeignKey(t => t.CursoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(t => t.Disciplina)
+                .WithMany(d => d.Turmas)
                 .HasForeignKey(t => t.DisciplinaId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento com Professor
-            entity.HasOne<ProfessorDominio>()
-                .WithMany()
+            entity.HasOne(t => t.Professor)
+                .WithMany(p => p.Turmas)
                 .HasForeignKey(t => t.ProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -216,99 +195,47 @@ public class EduManagerContext : DbContext
 
     private void ConfigurarNota(ModelBuilder modelBuilder)
     {
-                modelBuilder.Entity<NotaDominio>(entity =>
+        modelBuilder.Entity<NotaDominio>(entity =>
         {
             entity.ToTable("Notas");
             entity.HasKey(n => n.NotaId);
-            
-            entity.Property(n => n.Valor)
-                .IsRequired()
-                .HasColumnType("decimal(4,2)"); 
-                
-            entity.Property(n => n.DataAvaliacao)
-                .IsRequired();
-                
-            entity.Property(n => n.TipoAvaliacao)
-                .IsRequired()
-                .HasMaxLength(50);
 
-            // Relacionamento com Aluno
-            entity.HasOne<AlunoDominio>()
-                .WithMany()
+            entity.Property(n => n.Valor).HasPrecision(5, 2);
+            entity.Property(n => n.TipoAvaliacao).HasMaxLength(50);
+
+            entity.HasOne(n => n.Aluno)
+                .WithMany(a => a.Notas)
                 .HasForeignKey(n => n.AlunoId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento com Turma
-            entity.HasOne<TurmaDominio>()
-                .WithMany()
-                .HasForeignKey(n => n.TurmaId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Índice composto
-            entity.HasIndex(n => new { n.AlunoId, n.TurmaId, n.TipoAvaliacao });
+            entity.HasOne(n => n.Disciplina)
+                .WithMany(d => d.Notas)
+                .HasForeignKey(n => n.DisciplinaId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 
     private void ConfigurarFrequencia(ModelBuilder modelBuilder)
     {
-          modelBuilder.Entity<FrequenciaDominio>(entity =>
+        modelBuilder.Entity<FrequenciaDominio>(entity =>
         {
             entity.ToTable("Frequencias");
             entity.HasKey(f => f.FrequenciaId);
-            
-            entity.Property(f => f.Data)
-                .IsRequired();
-                
-            entity.Property(f => f.Presente)
-                .IsRequired();
-                
 
-            // Relacionamento com Aluno
-            entity.HasOne<AlunoDominio>()
-                .WithMany()
+            entity.HasOne(f => f.Aluno)
+                .WithMany(a => a.Frequencias)
                 .HasForeignKey(f => f.AlunoId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento com Turma
-            entity.HasOne<TurmaDominio>()
-                .WithMany()
+            entity.HasOne(f => f.Disciplina)
+                .WithMany(d => d.Frequencias)
+                .HasForeignKey(f => f.DisciplinaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(f => f.Turma)
+                .WithMany(t => t.Frequencias)
                 .HasForeignKey(f => f.TurmaId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Índice composto para evitar duplicatas
-            entity.HasIndex(f => new { f.AlunoId, f.TurmaId, f.Data }).IsUnique();
-        });
-    }
-
-    private void ConfigurarCoordenador(ModelBuilder modelBuilder)
-    {
-                modelBuilder.Entity<CoordenadorDominio>(entity =>
-        {
-            entity.ToTable("Coordenadores");
-            entity.HasKey(c => c.CoordenadorId);
-            
-            entity.Property(c => c.CoordenadorNome)
-                .IsRequired()
-                .HasMaxLength(100);
-                
-            entity.Property(c => c.Email)
-                .IsRequired()
-                .HasMaxLength(150);
-                
-            entity.Property(c => c.CPF)
-                .IsRequired()
-                .HasMaxLength(11);
-                
-            entity.HasOne(c => c.User)
-                .WithOne(u => u.Coordenador)
-                .HasForeignKey<CoordenadorDominio>(c => c.UserId)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
-                
-            // Índices únicos
-            entity.HasIndex(c => c.Email).IsUnique();
-            entity.HasIndex(c => c.CPF).IsUnique();
-            entity.HasIndex(c => c.UserId).IsUnique();
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

@@ -12,6 +12,9 @@ public class DisciplinaDominio
     public string? Codigo { get; set; }
     public int CursoId { get; set; }
 
-    // Relacionamentos
+    public virtual ProfessorDominio Professor { get; set; } = null!;
+    public virtual CursoDominio Curso { get; set; } = null!;
     public virtual ICollection<TurmaDominio> Turmas { get; set; } = new List<TurmaDominio>();
+    public virtual ICollection<NotaDominio> Notas { get; set; } = new List<NotaDominio>();
+    public virtual ICollection<FrequenciaDominio> Frequencias { get; set; } = new List<FrequenciaDominio>();
 }

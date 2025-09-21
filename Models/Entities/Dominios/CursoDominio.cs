@@ -18,7 +18,7 @@ namespace EduManager.Models.Entities.Dominios
         public bool Ativo { get; set; } = true;
         public int CoordenadorId { get; set; }
 
-        // Relacionamentos
+        public virtual CoordenadorDominio Coordenador { get; set; } = null!;
         public virtual ICollection<AlunoDominio> Alunos { get; set; } = new List<AlunoDominio>();
         public virtual ICollection<DisciplinaDominio> Disciplinas { get; set; } = new List<DisciplinaDominio>();
 
