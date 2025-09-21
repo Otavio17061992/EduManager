@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace EduManager.Models.Entities.Dominios
 {
     public class CursoDominio
     {
+        [Key]
         public int CursoId { get; set; }
         public string? NomeCurso { get; set; }
         public string? Descricao { get; set; }

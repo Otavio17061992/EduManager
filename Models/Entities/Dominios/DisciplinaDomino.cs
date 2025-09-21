@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace EduManager.Models.Entities.Dominios;
 
 public class DisciplinaDominio
 {
+    [Key]
     public int DisciplinaId { get; set; }
     public string? Nome { get; set; }
     public int CargaHoraria { get; set; }

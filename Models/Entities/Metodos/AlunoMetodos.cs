@@ -10,7 +10,7 @@ public class AlunoMetodos
 {
     private void InserirAluno(AlunoDominio aluno)
     {
-
+        
     }
 
     private void AtualizarAluno(AlunoDominio aluno)
@@ -24,6 +24,11 @@ public class AlunoMetodos
     }
 
     private AlunoDominio? ListarAlunoPorNome(string nome)
+    {
+        return null;
+    }
+
+    private AlunoDominio? ListarAlunoPorId(int alunoId)
     {
         return null;
     }

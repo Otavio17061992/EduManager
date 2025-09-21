@@ -1,9 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduManager.Models.Entities.Dominios
 {
     public class FrequenciaDominio
     {
+        [Key]
         public int FrequenciaId { get; set; }
         public int AlunoId { get; set; }
         public int DisciplinaId { get; set; }

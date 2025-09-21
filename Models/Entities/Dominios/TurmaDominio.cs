@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduManager.Models.Entities.Dominios
 {
     public class TurmaDominio
     {
+        [Key]
         public int TurmaId { get; set; }
         public string Nome { get; set; } = string.Empty;
         public int CursoId { get; set; }
