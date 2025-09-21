@@ -14,7 +14,9 @@ namespace EduManager.Models.Entities.Dominios
         public string? Descricao { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataTermino { get; set; }
+        public int CargaHoraria { get; set; }
         public bool Ativo { get; set; } = true;
+        public int CoordenadorId { get; set; }
 
         // Relacionamentos
         public virtual ICollection<AlunoDominio> Alunos { get; set; } = new List<AlunoDominio>();

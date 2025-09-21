@@ -11,11 +11,13 @@ namespace EduManager.Models.Entities.Dominios
         [Key]
         public int AlunoId { get; set; }
         public string? UserId { get; set; }
+        public DateTime DataNascimento { get; set; }
         public ApplicationUser? User { get; set; }
         public DateTime DataMatricula { get; set; }
         public int CursoId { get; set; }
-        public virtual CursoDominio? Curso { get; set; }
         public bool Ativo { get; set; } = true;
+        public string? CPF { get; set; }
+        public string? Email { get; set; }
 
         public virtual ICollection<NotaDominio> Notas { get; set; } = new List<NotaDominio>();
         public virtual ICollection<FrequenciaDominio> Frequencias { get; set; } = new List<FrequenciaDominio>();

@@ -11,6 +11,9 @@ namespace EduManager.Models.Entities.Dominios
         [Key]
         public int CoordenadorId { get; set; }
         public string? UserId { get; set; }
+        public string? CoordenadorNome { get; set;}
+        public string? CPF { get; set; }
+        public string? Email { get; set; }
         public ApplicationUser? User { get; set; }
         public DateTime DataContratacao { get; set; }
         public decimal Salario { get; set; }

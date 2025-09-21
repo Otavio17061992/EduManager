@@ -10,19 +10,17 @@ namespace EduManager.Models.Entities.Dominios
         public int TurmaId { get; set; }
         public string Nome { get; set; } = string.Empty;
         public int CursoId { get; set; }
+        public int DisciplinaId { get; set; }
+        public string? Ano { get; set; }
+        public int Semestre { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
         public bool Ativa { get; set; } = true;
+        public int ProfessorId { get; set; }
 
-        // Relacionamentos
-        public virtual CursoDominio? Curso { get; set; }
-        public virtual ICollection<AlunoDominio> Alunos { get; set; } = new List<AlunoDominio>();
-        public virtual ICollection<DisciplinaDominio> Disciplinas { get; set; } = new List<DisciplinaDominio>();
-        public virtual ICollection<ProfessorDominio> Professores { get; set; } = new List<ProfessorDominio>();
 
         // Propriedades calculadas
         public int DuracaoDias => (DataFim - DataInicio).Days;
-        public int QuantidadeAlunos => Alunos?.Count ?? 0;
         public string Status => Ativa ? "Ativa" : "Inativa";
     }
 }

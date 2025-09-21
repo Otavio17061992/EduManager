@@ -1,4 +1,16 @@
+using EduManager.InfraEstrutura.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Database connection
+builder.Services.AddDbContext<EduManagerContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -14,10 +26,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseRouting();
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

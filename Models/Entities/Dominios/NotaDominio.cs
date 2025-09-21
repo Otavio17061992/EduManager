@@ -14,6 +14,9 @@ namespace EduManager.Models.Entities.Dominios
         public int DisciplinaId { get; set; }
         public double Valor { get; set; }
         public DateTime DataLancamento { get; set; }
+        public DateTime DataAvaliacao { get; set; }
+        public string? TipoAvaliacao { get; set; }
+        public int TurmaId { get; set; }
 
         // Relacionamentos
         public virtual AlunoDominio? Aluno { get; set; }
