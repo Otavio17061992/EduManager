@@ -10,12 +10,12 @@ namespace EduManager.Models.Entities.Dominios
     {
         [Key]
         public int CursoId { get; set; }
-        public string? NomeCurso { get; set; }
-        public string? Descricao { get; set; }
-        public DateTime DataInicio { get; set; }
-        public DateTime DataTermino { get; set; }
-        public int CargaHoraria { get; set; }
-        public bool Ativo { get; set; } = true;
+        public string? CursoNome { get; set; }
+        public string? CursoDescricao { get; set; }
+        public DateTime CursoDataInicio { get; set; }
+        public DateTime CursoDataTermino { get; set; }
+        public int CursoCargaHoraria { get; set; }
+        public bool CursoAtivo { get; set; } = true;
         public int CoordenadorId { get; set; }
 
         public virtual CoordenadorDominio Coordenador { get; set; } = null!;
@@ -23,8 +23,8 @@ namespace EduManager.Models.Entities.Dominios
         public virtual ICollection<DisciplinaDominio> Disciplinas { get; set; } = new List<DisciplinaDominio>();
 
         // Propriedade calculada
-        public string Status => Ativo ? "Ativo" : "Inativo";
-        public int DuracaoDias => (DataTermino - DataInicio).Days;
+        public string Status => CursoAtivo ? "Ativo" : "Inativo";
+        public int DuracaoDias => (CursoDataTermino - CursoDataInicio).Days;
         public int QuantidadeAlunos => Alunos?.Count ?? 0;
     }
 }

@@ -12,13 +12,13 @@ namespace EduManager.Models.Entities.Dominios
         public int AlunoId { get; set; }
         public string? UserId { get; set; }
 
-        public string? NomeCompleto { get; set; }
-        public DateTime DataNascimento { get; set; }
-        public DateTime DataMatricula { get; set; }
+        public string? AlunoNomeCompleto { get; set; }
+        public DateTime AlunoDataNascimento { get; set; }
+        public DateTime AlunoDataMatricula { get; set; }
         public int CursoId { get; set; }
-        public bool Ativo { get; set; } = true;
-        public string? CPF { get; set; }
-        public string? Email { get; set; }
+        public bool AlunoAtivo { get; set; } = true;
+        public string? AlunoCPF { get; set; }
+        public string? AlunoEmail { get; set; }
 
         public virtual ApplicationUser? User { get; set; }
         public virtual CursoDominio Curso { get; set; } = null!; 
