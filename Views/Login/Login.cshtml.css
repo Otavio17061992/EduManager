@@ -1,0 +1,80 @@
+/* O 'vh-100' no HTML garante que o container ocupe 100% da altura da viewport. */
+.login-page-wrapper {
+  /* Gradiente animado como fundo (Moderno e Animado) */
+  background: linear-gradient(-45deg, #007bff, #28a745, #17a2b8, #6f42c1);
+  background-size: 400% 400%; /* Permite a animação do gradiente */
+  animation: gradient-animation 15s ease infinite;
+  min-height: 100vh;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* -------------------------------------- */
+/* 2. Estilo do Card de Login */
+/* -------------------------------------- */
+.login-card {
+  border-radius: 1rem; /* Borda arredondada */
+  backdrop-filter: blur(10px); /* Efeito de vidro (Glassmorphism) */
+  background-color: rgba(255, 255, 255, 0.9); /* Fundo semi-transparente */
+}
+
+/* -------------------------------------- */
+/* 3. Animação de Entrada (Fade In) */
+/* -------------------------------------- */
+.animated-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------------- */
+/* 4. Animação do Botão */
+/* -------------------------------------- */
+.login-btn-animated {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn-animated:hover {
+  transform: translateY(-2px); /* Efeito de "levantar" */
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.5);
+}
+
+/* Efeito de onda ao clicar (opcional, mas moderno) */
+.login-btn-animated::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transition: all 0.5s;
+}
+
+.login-btn-animated:focus::after {
+  transform: scale(150, 150) translate(-50%);
+  opacity: 1;
+  opacity: 0;
+}

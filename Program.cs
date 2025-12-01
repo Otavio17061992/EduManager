@@ -1,16 +1,16 @@
 using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
-
-
+using Microsoft.AspNetCore.Identity; // Já estava aqui
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Database connection
+// 1. Configuração do DbContext
 builder.Services.AddDbContext<EduManagerContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+//     options.SignIn.RequireConfirmedAccount = false) // Mude a opção conforme sua regra
+//     .AddEntityFrameworkStores<EduManagerContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -26,13 +26,16 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+
+app.UseRouting(); 
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseRouting();
-
+// O mapeamento de rota é o Endpoint final.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}");
 
 app.Run();
