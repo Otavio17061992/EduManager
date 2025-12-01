@@ -11,7 +11,6 @@ using EduManager.Models.ViewModels;
 
 namespace EduManager.Controllers.Login
 {
-    [Route("[controller]")]
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;

@@ -8,17 +8,13 @@ namespace EduManager.Models.ViewModels
 {
 public class LoginViewModel
 {
-    public InputModel Input { get; set; } = new InputModel();
-
-    public class InputModel
-    {
         [Required(ErrorMessage = "O Email é obrigatório.")]
         [EmailAddress(ErrorMessage = "Formato de Email inválido.")]
         public string? Email { get; set; }
-        
-        [Required(ErrorMessage = "A Senha é obrigatória.")]
+
+                [Required(ErrorMessage = "A Senha é obrigatória.")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
-    }
+
 }
 }
