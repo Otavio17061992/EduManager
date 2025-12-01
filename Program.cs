@@ -1,6 +1,6 @@
 using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity; // Já estava aqui
+using Microsoft.AspNetCore.Identity; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +9,7 @@ builder.Services.AddDbContext<EduManagerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-//     options.SignIn.RequireConfirmedAccount = false) // Mude a opção conforme sua regra
+//     options.SignIn.RequireConfirmedAccount = false) 
 //     .AddEntityFrameworkStores<EduManagerContext>();
 
 // Add services to the container.
