@@ -54,9 +54,9 @@ public class EduManagerContext : DbContext
             entity.HasKey(c => c.CoordenadorId);
             
             entity.Property(c => c.CoordenadorNome).IsRequired().HasMaxLength(100);
-            entity.Property(c => c.Email).IsRequired().HasMaxLength(150);
-            entity.Property(c => c.CPF).IsRequired().HasMaxLength(11);
-            entity.Property(c => c.Salario).HasPrecision(18, 2);
+            entity.Property(c => c.CoordenadorEmail).IsRequired().HasMaxLength(150);
+            entity.Property(c => c.CoordenadorCPF).IsRequired().HasMaxLength(11);
+            entity.Property(c => c.CoordenadorSalario).HasPrecision(18, 2);
             entity.Property(c => c.UserId).HasMaxLength(450);
 
             entity.HasOne(c => c.User)
@@ -65,8 +65,8 @@ public class EduManagerContext : DbContext
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
                 
-            entity.HasIndex(c => c.Email).IsUnique();
-            entity.HasIndex(c => c.CPF).IsUnique();
+            entity.HasIndex(c => c.CoordenadorEmail).IsUnique();
+            entity.HasIndex(c => c.CoordenadorCPF).IsUnique();
             entity.HasIndex(c => c.UserId).IsUnique();
         });
     }
@@ -102,8 +102,8 @@ public class EduManagerContext : DbContext
             entity.ToTable("Cursos");
             entity.HasKey(c => c.CursoId);
 
-            entity.Property(c => c.NomeCurso).IsRequired().HasMaxLength(100);
-            entity.Property(c => c.Descricao).HasMaxLength(500);
+            entity.Property(c => c.CursoNome).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.CursoDescricao).HasMaxLength(500);
 
             entity.HasOne(c => c.Coordenador)
                 .WithMany(coord => coord.Cursos)
@@ -119,10 +119,10 @@ public class EduManagerContext : DbContext
             entity.ToTable("Alunos");
             entity.HasKey(a => a.AlunoId);
             
-            entity.Property(a => a.NomeCompleto).IsRequired().HasMaxLength(100);
-            entity.Property(a => a.Email).IsRequired().HasMaxLength(150);
-            entity.Property(a => a.CPF).IsRequired().HasMaxLength(11);
-            entity.Property(a => a.DataNascimento).IsRequired();
+            entity.Property(a => a.AlunoNomeCompleto).IsRequired().HasMaxLength(100);
+            entity.Property(a => a.AlunoEmail).IsRequired().HasMaxLength(150);
+            entity.Property(a => a.AlunoCPF).IsRequired().HasMaxLength(11);
+            entity.Property(a => a.AlunoDataNascimento).IsRequired();
             entity.Property(a => a.UserId).HasMaxLength(450);
                 
             entity.HasOne(a => a.User)
@@ -136,8 +136,8 @@ public class EduManagerContext : DbContext
                 .HasForeignKey(a => a.CursoId)
                 .OnDelete(DeleteBehavior.Restrict);
                 
-            entity.HasIndex(a => a.Email).IsUnique();
-            entity.HasIndex(a => a.CPF).IsUnique();
+            entity.HasIndex(a => a.AlunoEmail).IsUnique();
+            entity.HasIndex(a => a.AlunoCPF).IsUnique();
             entity.HasIndex(a => a.UserId).IsUnique();
         });
     }
