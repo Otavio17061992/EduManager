@@ -36,6 +36,7 @@ public class EduManagerContext : IdentityDbContext<ApplicationUser>
         ConfigurarTurma(modelBuilder);
         ConfigurarNota(modelBuilder);
         ConfigurarFrequencia(modelBuilder);
+        ConfigurarUser(modelBuilder);
     }
 
     private void ConfigurarApplicationUser(ModelBuilder modelBuilder)
@@ -147,6 +148,8 @@ public class EduManagerContext : IdentityDbContext<ApplicationUser>
         });
     }
 
+    
+
     private void ConfigurarDisciplina(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<DisciplinaDominio>(entity =>
@@ -242,5 +245,19 @@ public class EduManagerContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(f => f.TurmaId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+    }
+
+    private void ConfigurarUser(ModelBuilder modelBuilder)
+    {
+            modelBuilder.Entity<ApplicationUser>(entity =>
+    {
+        entity.ToTable("Usuarios"); 
+
+        entity.Property(u => u.Nome).HasMaxLength(100).IsRequired();
+        entity.Property(u => u.CPF).HasMaxLength(11).IsRequired();
+        
+        entity.HasIndex(u => u.CPF).IsUnique();
+    });
+
     }
 }
