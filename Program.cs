@@ -1,6 +1,7 @@
 using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity; 
+using EduManager.Models.Entities.Dominios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EduManagerContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-    options.SignIn.RequireConfirmedAccount = true) 
-    .AddEntityFrameworkStores<EduManagerContext>()
-    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentity(options => 
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
+.AddEntityFrameworkStores<EduManagerContext>()
+.AddDefaultTokenProviders();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
