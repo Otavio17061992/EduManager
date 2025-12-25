@@ -1,7 +1,6 @@
 /* O 'vh-100' no HTML garante que o container ocupe 100% da altura da viewport. */
 .login-page-wrapper {
-  /* Gradiente animado como fundo (Moderno e Animado) */
-  background: linear-gradient(-45deg, #007bff, #28a745, #17a2b8, #6f42c1);
+  background: #FFFF;
   background-size: 400% 400%; /* Permite a animação do gradiente */
   animation: gradient-animation 15s ease infinite;
   min-height: 100vh;

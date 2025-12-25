@@ -1,25 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using EduManager.InfraEstrutura.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using EduManager.Models;
 using EduManager.Models.ViewModels;
+using EduManager.Models.Entities.Dominios; 
+
 
 namespace EduManager.Controllers.Login
 {
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly EduManagerContext _EduManagerContext;
+        private readonly UserManager<ApplicationUser> _userManager; 
+        private readonly SignInManager<ApplicationUser> _signInManager; 
 
-        public AccountController(ILogger<AccountController> logger, EduManagerContext eduManagerContext)
+
+        public AccountController(
+            ILogger<AccountController> logger,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager) 
         {
             _logger = logger;
-            _EduManagerContext = eduManagerContext;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -30,15 +32,17 @@ namespace EduManager.Controllers.Login
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if(ModelState.IsValid)
             {
-                bool loginSuccessful = true;
-
-                if (loginSuccessful)
+                var result = await _signInManager.PasswordSignInAsync(
+                    model.Email,
+                    model.Password,
+                    isPersistent: false,
+                    lockoutOnFailure: false);
+                if (result.Succeeded)
                 {
-                    
                     return RedirectToAction("Index","Home");
                 }
             }

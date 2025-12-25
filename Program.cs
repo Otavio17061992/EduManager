@@ -8,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EduManagerContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-//     options.SignIn.RequireConfirmedAccount = false) 
-//     .AddEntityFrameworkStores<EduManagerContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+    options.SignIn.RequireConfirmedAccount = true) 
+    .AddEntityFrameworkStores<EduManagerContext>()
+    .AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -1,9 +1,10 @@
 using EduManager.Models.Entities.Dominios;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EduManager.InfraEstrutura.Data;
 
-public class EduManagerContext : DbContext
+public class EduManagerContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<AlunoDominio> Aluno { get; set; }
     public DbSet<ProfessorDominio> Professor { get; set; }
@@ -15,6 +16,10 @@ public class EduManagerContext : DbContext
     public DbSet<CoordenadorDominio> Coordenador { get; set; }
 
     public EduManagerContext(DbContextOptions<EduManagerContext> options) : base(options)
+    {
+    }
+
+    public EduManagerContext()
     {
     }
 
