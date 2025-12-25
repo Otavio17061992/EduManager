@@ -1,6 +1,6 @@
 using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity; 
+using Microsoft.AspNetCore.Identity;
 using EduManager.Models.Entities.Dominios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,7 @@ builder.Services.AddDbContext<EduManagerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddIdentity(options => 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
@@ -19,7 +19,7 @@ builder.Services.AddIdentity(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
 })
-.AddEntityFrameworkStores<EduManagerContext>()
+.AddEntityFrameworkStores<EduManagerContext>() 
 .AddDefaultTokenProviders();
 
 

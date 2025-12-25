@@ -30,23 +30,47 @@ namespace EduManager.Controllers.Login
             return View();
         }
 
-        [HttpPost]
         [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    model.Email,
-                    model.Password,
-                    isPersistent: false,
-                    lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(model.Email!);
+                
+                if (user == null)
+                {
+                    _logger.LogWarning("Usuário não encontrado.");
+                }
+                else
+                {
+                    // var novoHash = _userManager.PasswordHasher.HashPassword(user, model.Password!);
+                    // Console.WriteLine($"O hash correto para a senha digitada é: {novoHash}");
+
+                    var passwordCheck = await _signInManager.CheckPasswordSignInAsync(user, model.Password!, false);
+                    Console.WriteLine(passwordCheck);
+                    
+                    if (!passwordCheck.Succeeded)
+                    {
+                        // Aqui você pode inspecionar o 'passwordCheck' no Debug (F5)
+                        // Veja se 'IsLockedOut' ou 'IsNotAllowed' é true
+                        _logger.LogWarning($"Falha: Locked={passwordCheck.IsLockedOut}, NotAllowed={passwordCheck.IsNotAllowed}");
+                    }
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(model.Email!, model.Password!, false, false);
+                
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index","Home");
+                    _logger.LogInformation("Usuário logado com sucesso.");
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    _logger.LogWarning("Tentativa de login inválida.");
+                    ModelState.AddModelError(string.Empty, "Tentativa de login inválida.");
                 }
             }
-
             return View(model);
         }
 

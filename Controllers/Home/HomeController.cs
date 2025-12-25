@@ -1,6 +1,7 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using EduManager.Models;
+using EduManager.InfraEstrutura.Security;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EduManager.Controllers;
 

@@ -4,6 +4,7 @@ using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduManager.Migrations
 {
     [DbContext(typeof(EduManagerContext))]
-    partial class EduManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20251225170025_AjusteTabelasIdentity")]
+    partial class AjusteTabelasIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

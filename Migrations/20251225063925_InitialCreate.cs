@@ -582,7 +582,7 @@ namespace EduManager.Migrations
                 values: new object[] { 
                     ADMIN_ID, "Admin", "Master", "00000000000", new DateTime(2000, 1, 1), true, DateTime.Now, 
                     "admin@edumanager.com", "ADMIN@EDUMANAGER.COM", "admin@edumanager.com", "ADMIN@EDUMANAGER.COM", 
-                    true, "AQAAAAIAAYagAAAAEPeG/S1f6VfW0XyvW7mQ==", Guid.NewGuid().ToString(), Guid.NewGuid().ToString(),
+                    true, "AQAAAAIAAYagAAAAEP69F3R2H8Nn1zD5U7X9vL2mS4aB0W1qR3kY5zT8uV9wX4yZ2aB0C1D2E3F4G5H6I7==", Guid.NewGuid().ToString(), Guid.NewGuid().ToString(),
                     false, false, true, 0 
                 }
             );
