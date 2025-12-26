@@ -30,6 +30,30 @@ namespace EduManager.Controllers.Login
             return View();
         }
 
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
+            // limpa o cookie de autenticação
+            _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
