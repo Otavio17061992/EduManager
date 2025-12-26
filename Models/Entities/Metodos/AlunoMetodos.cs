@@ -2,39 +2,71 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EduManager.InfraEstrutura.Data;
 using EduManager.Models.Entities.Dominios;
+using EduManager.Models.Entities.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduManager.Models.Entities.Metodos;
 
-public class AlunoMetodos
+public class AlunoMetodos : IAlunosRepository
 {
-    private void InserirAluno(AlunoDominio aluno)
+
+    private readonly EduManagerContext _context;
+
+    public async Task AdicionarAsync(AlunoDominio aluno)
     {
-        
+        await _context.Aluno.AddAsync(aluno);
+        await _context.SaveChangesAsync();
     }
 
-    private void AtualizarAluno(AlunoDominio aluno)
+    public Task AtualizarAsync(AlunoDominio aluno)
     {
-
+        _context.Aluno.Update(aluno);
+        return _context.SaveChangesAsync();
     }
 
-    private void DeletarAluno(int alunoId)
+    public async Task<AlunoDominio?> ObterPorCpfAsync(string cpf)
     {
-
+        return await _context.Aluno
+            .FirstOrDefaultAsync(a => a.AlunoCPF == cpf);
     }
 
-    private AlunoDominio? ListarAlunoPorNome(string nome)
+    public async Task<AlunoDominio?> ObterPorEmailAsync(string email)
     {
-        return null;
+        return await _context.Aluno
+            .FirstOrDefaultAsync(a => a.AlunoEmail == email);
     }
 
-    private AlunoDominio? ListarAlunoPorId(int alunoId)
+    public async Task<AlunoDominio?> ObterPorIdAsync(int id)
     {
-        return null;
+        return await _context.Aluno
+            .FirstOrDefaultAsync(a => a.AlunoId == id);
     }
 
-    private List<AlunoDominio?> ListarTodosAlunos()
+    public async Task<AlunoDominio?> ObterPorNomeAsync(string nome)
     {
-        return new List<AlunoDominio?>();
+        return await _context.Aluno
+            .FirstOrDefaultAsync(a => a.AlunoNomeCompleto == nome);
     }
-}
+
+    public async Task<IEnumerable<AlunoDominio>> ListarAsync()
+    {
+        return await _context.Aluno.ToListAsync();
+    }
+
+    public async Task<bool> ExisteAsync(int id)
+    {
+        return await _context.Aluno.AnyAsync(a => a.AlunoId == id);
+    }
+
+    public async Task RemoverAsync(int id)
+    {
+        var aluno = await ObterPorIdAsync(id);
+        if (aluno != null)
+        {
+            _context.Aluno.Remove(aluno);
+            await _context.SaveChangesAsync();
+        }
+    }
+    }
