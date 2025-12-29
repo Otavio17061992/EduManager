@@ -1,12 +1,12 @@
-
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/azure-sql-edge
     container_name: edumanager-sqlserver
+    cap_add:
+      - SYS_PTRACE
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=EduManager@2024
-      - MSSQL_PID=Express
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=EduManager@2025
     ports:
       - "1433:1433"
     volumes:
