@@ -6,51 +6,196 @@
 
 
 <div class="login-page-wrapper">
-        <div class="container">
-            <div class="row justify-content-center align-items-center vh-100">
-                <div class="col-lg-5 col-md-8 col-sm-10">
-                    <div class="card shadow-lg border-0 login-card animated-fade-in">
-                        <div class="card-body p-5">
-                            <div class="text-center mb-4">
-                                <h2 class="fw-bold text-primary">EduManager</h2>
-                                <p class="text-muted">Acesse sua conta</p>
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-lg-5 col-md-8 col-sm-10">
+                <div class="card shadow-lg border-0 login-card animated-fade-in">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold text-primary">EduManager</h2>
+                            <p class="text-muted">Acesse sua conta</p>
+                        </div>
+
+                        <form asp-action="Login" asp-controller="Account" method="post">
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input asp-for="Email" class="form-control form-control-lg"
+                                        placeholder="seu@email.com" autocomplete="username" aria-required="true" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
 
-                            <form asp-action="Login" asp-controller="Account" method="post">
-                                <div class="mb-3">
-                                    <label asp-for="Email" class="form-label">Email</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        <input asp-for="Email" class="form-control form-control-lg" placeholder="seu@email.com" autocomplete="username" aria-required="true" />
-                                    </div>
-                                    <span asp-validation-for="Email" class="text-danger"></span>
+                            <div class="mb-4">
+                                <label asp-for="Password" class="form-label">Senha</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    <input asp-for="Password" class="form-control form-control-lg" placeholder="******"
+                                        autocomplete="current-password" aria-required="true" />
                                 </div>
-
-                                <div class="mb-4">
-                                    <label asp-for="Password" class="form-label">Senha</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                        <input asp-for="Password" class="form-control form-control-lg" placeholder="******" autocomplete="current-password" aria-required="true" />
-                                    </div>
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                </div>
-
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary btn-lg login-btn-animated">
-                                        Entrar
-                                    </button>
-                                </div>
-
-                                <div class="text-center mt-3">
-                                    <a href="#" class="text-decoration-none">Esqueceu sua senha?</a>
-                                </div>
-                            </form>
+                                <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg login-btn-animated">
+                                    Entrar
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <a href="#" class="text-decoration-none" data-bs-toggle="modal"
+                                    data-bs-target="#forgotPasswordModal">Esqueceu sua senha?</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</div>
+
+<!-- Modal Esqueceu a Senha -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Redefinir Senha</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Verify CPF -->
+                <div id="step1-cpf">
+                    <p>Informe seu CPF para verificarmos seu cadastro.</p>
+                    <div class="mb-3">
+                        <label for="forgotCpf" class="form-label">CPF</label>
+                        <input type="text" class="form-control" id="forgotCpf" placeholder="000.000.000-00">
+                        <div class="invalid-feedback" id="cpfError">CPF não encontrado.</div>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" id="btnVerifyCpf">Verificar</button>
+                </div>
+
+                <div id="step2-password" class="d-none">
+                    <p class="text-success">CPF verificado! Defina sua nova senha.</p>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Nova Senha</label>
+                        <input type="password" class="form-control" id="newPassword">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+                        <input type="password" class="form-control" id="confirmPassword">
+                        <div class="invalid-feedback" id="passwordError">As senhas não conferem.</div>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" id="btnResetPassword">Salvar Nova Senha</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<script>
+    document.getElementById('btnVerifyCpf').addEventListener('click', function () {
+        const cpf = document.getElementById('forgotCpf').value;
+        const btn = this;
+        const errorDiv = document.getElementById('cpfError');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        if (!cpf) {
+            errorDiv.textContent = "Digite o CPF.";
+            document.getElementById('forgotCpf').classList.add('is-invalid');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Verificando...";
+
+        fetch('/Account/VerifyCpf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify(cpf)
+        })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.textContent = "Verificar";
+
+                if (data.success) {
+                    document.getElementById('step1-cpf').classList.add('d-none');
+                    document.getElementById('step2-password').classList.remove('d-none');
+                } else {
+                    errorDiv.textContent = data.message || "CPF não encontrado.";
+                    document.getElementById('forgotCpf').classList.add('is-invalid');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                btn.disabled = false;
+                btn.textContent = "Verificar";
+                errorDiv.textContent = "Erro ao verificar CPF.";
+                document.getElementById('forgotCpf').classList.add('is-invalid');
+            });
+    });
+
+    document.getElementById('btnResetPassword').addEventListener('click', function () {
+        const cpf = document.getElementById('forgotCpf').value;
+        const pass = document.getElementById('newPassword').value;
+        const confirm = document.getElementById('confirmPassword').value;
+        const btn = this;
+        const errorDiv = document.getElementById('passwordError');
+
+        document.getElementById('confirmPassword').classList.remove('is-invalid');
+
+        if (!pass || pass.length < 6) {
+            errorDiv.textContent = "A senha deve ter no mínimo 6 caracteres.";
+            document.getElementById('confirmPassword').classList.add('is-invalid');
+            return;
+        }
+
+        if (pass !== confirm) {
+            errorDiv.textContent = "As senhas não conferem.";
+            document.getElementById('confirmPassword').classList.add('is-invalid');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Salvando...";
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        fetch('/Account/ResetPasswordByCpf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({ cpf: cpf, newPassword: pass })
+        })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.textContent = "Salvar Nova Senha";
+
+                if (data.success) {
+                    alert('Senha alterada com sucesso! Você pode fazer login agora.');
+                    window.location.reload();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                btn.disabled = false;
+                alert('Erro ao redefinir senha.');
+            });
+    });
+
+    // Clear invalid verification on input
+    document.getElementById('forgotCpf').addEventListener('input', function () {
+        this.classList.remove('is-invalid');
+    });
+</script>

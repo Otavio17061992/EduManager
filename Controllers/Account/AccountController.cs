@@ -68,16 +68,14 @@ namespace EduManager.Controllers.Login
                 }
                 else
                 {
-                    // var novoHash = _userManager.PasswordHasher.HashPassword(user, model.Password!);
-                    // Console.WriteLine($"O hash correto para a senha digitada é: {novoHash}");
+                    //var novoHash = _userManager.PasswordHasher.HashPassword(user, model.Password!);
+                    //Console.WriteLine($"O hash correto para a senha digitada é: {novoHash}");
 
                     var passwordCheck = await _signInManager.CheckPasswordSignInAsync(user, model.Password!, false);
                     Console.WriteLine(passwordCheck);
                     
                     if (!passwordCheck.Succeeded)
                     {
-                        // Aqui você pode inspecionar o 'passwordCheck' no Debug (F5)
-                        // Veja se 'IsLockedOut' ou 'IsNotAllowed' é true
                         _logger.LogWarning($"Falha: Locked={passwordCheck.IsLockedOut}, NotAllowed={passwordCheck.IsNotAllowed}");
                     }
                 }
@@ -103,5 +101,49 @@ namespace EduManager.Controllers.Login
         {
             return View("Error!");
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyCpf([FromBody] string cpf)
+        {
+            if (string.IsNullOrEmpty(cpf))
+                return Json(new { success = false, message = "CPF não informado." });
+
+            var cleanCpf = new string(cpf.Where(char.IsDigit).ToArray());
+
+            var user = _userManager.Users.FirstOrDefault(u => u.CPF == cleanCpf);
+
+            if (user != null)
+            {
+                return Json(new { success = true });
+            }
+            
+            return Json(new { success = false, message = "CPF não encontrado." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordByCpf([FromBody] ResetPasswordRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Cpf) || string.IsNullOrEmpty(request.NewPassword))
+                return Json(new { success = false, message = "Dados incompletos." });
+
+            var cleanCpf = new string(request.Cpf.Where(char.IsDigit).ToArray());
+            var user = _userManager.Users.FirstOrDefault(u => u.CPF == cleanCpf);
+
+            if (user == null)
+                return Json(new { success = false, message = "Usuário não encontrado." });
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false, message = "Erro ao redefinir senha." });
+        }
+
     }
 }
