@@ -14,6 +14,11 @@ public class AlunoMetodos : IAlunosRepository
 
     private readonly EduManagerContext _context;
 
+    public AlunoMetodos(EduManagerContext context)
+    {
+        _context = context;
+    }
+
     public async Task AdicionarAsync(AlunoDominio aluno)
     {
         await _context.Aluno.AddAsync(aluno);
