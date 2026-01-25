@@ -112,8 +112,6 @@ namespace EduManager.Controllers.Professor
                 TempData["MensagemSucesso"] = "Nota lançada com sucesso!";
                 return RedirectToAction(nameof(LancarNotas));
             }
-
-            // Re-populate ViewBags on error
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var professor = await _professorRepository.ListarProfessorPorUserId(userId);
             if (professor != null)
