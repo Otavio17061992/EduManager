@@ -75,4 +75,12 @@ public class AlunoMetodos : IAlunosRepository
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<int> ContarAlunosPorProfessorAsync(int professorId)
+    {
+        return await _context.Turma
+            .Where(t => t.ProfessorId == professorId)
+            .SelectMany(t => t.Frequencias.Select(f => f.AlunoId))
+            .Distinct()
+            .CountAsync();
     }
+}

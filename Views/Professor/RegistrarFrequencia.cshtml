@@ -1,21 +1,151 @@
+@model List<EduManager.Models.Entities.Dominios.FrequenciaDominio>
 @{
     ViewData["Title"] = "Registrar Frequência";
+     var turmas = ViewBag.Turmas as IEnumerable<EduManager.Models.Entities.Dominios.TurmaDominio>;
 }
 
 <div class="container-fluid pb-5">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
         <h1 class="h2">Registrar Frequência</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <a href="@Url.Action("Dashboard", "Professor")" class="btn btn-sm btn-outline-secondary">
+             <a href="@Url.Action("Dashboard", "Professor")" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Voltar
             </a>
         </div>
     </div>
 
-    <div class="alert alert-info" role="alert">
-        <h4 class="alert-heading"><i class="bi bi-calendar-check me-2"></i>Funcionalidade em Breve</h4>
-        <p>O módulo de frequência permitirá o controle diário de presença dos alunos por turma.</p>
-        <hr>
-        <p class="mb-0">Aguarde as próximas atualizações do sistema.</p>
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["MensagemSucesso"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                 <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar3 me-2"></i>Chamada</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label for="TurmaSelect" class="form-label">Turma</label>
+                            <select id="TurmaSelect" class="form-select" onchange="carregarListaFrequencia()">
+                                 <option value="">Selecione a Turma...</option>
+                                @if (turmas != null)
+                                {
+                                    foreach (var turma in turmas)
+                                    {
+                                        <option value="@turma.TurmaId" data-disciplina-id="@turma.DisciplinaId">@turma.Nome - @turma.Disciplina?.Nome</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="DataAula" class="form-label">Data da Aula</label>
+                            <input type="date" id="DataAula" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                        </div>
+                    </div>
+
+                    <form asp-action="RegistrarFrequencia" method="post" id="formFrequencia" style="display:none;">
+                         <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th class="text-center" width="150">Presente</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaAlunos">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                        
+                        <div class="d-flex justify-content-end mt-3">
+                             <button type="submit" class="btn btn-success"><i class="bi bi-check2-all me-2"></i>Salvar Frequência</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        @if (TempData["MensagemSucesso"] != null)
+        {
+            <text>
+            Swal.fire({
+                title: 'Sucesso!',
+                text: '@TempData["MensagemSucesso"]',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+            </text>
+        }
+
+        function carregarListaFrequencia() {
+            var turmaId = document.getElementById("TurmaSelect").value;
+            var disciplinaId = document.getElementById("TurmaSelect").selectedOptions[0]?.getAttribute("data-disciplina-id");
+            var form = document.getElementById("formFrequencia");
+            var tbody = document.getElementById("listaAlunos");
+            
+            if (!turmaId) {
+                form.style.display = "none";
+                return;
+            }
+
+            tbody.innerHTML = '<tr><td colspan="2" class="text-center">Carregando...</td></tr>';
+            form.style.display = "block";
+
+             fetch('@Url.Action("GetAlunosPorTurma", "Professor")?turmaId=' + turmaId)
+                .then(response => response.json())
+                .then(data => {
+                    tbody.innerHTML = '';
+                    if(data.length === 0) {
+                         tbody.innerHTML = '<tr><td colspan="2" class="text-center">Nenhum aluno encontrado nesta turma.</td></tr>';
+                         return;
+                    }
+
+                    data.forEach((aluno, index) => {
+                        var tr = document.createElement("tr");
+                        var dataAulaVal = document.getElementById("DataAula").value;
+                        
+                        // Hidden inputs for binding List<FrequenciaDominio>
+                        var html = `
+                            <td>
+                                ${aluno.alunoNomeCompleto}
+                                <input type="hidden" name="[${index}].AlunoId" value="${aluno.alunoId}" />
+                                <input type="hidden" name="[${index}].TurmaId" value="${turmaId}" />
+                                <input type="hidden" name="[${index}].DisciplinaId" value="${disciplinaId}" />
+                                <input type="hidden" name="[${index}].DataAula" value="${dataAulaVal}" class="data-aula-hidden" />
+                            </td>
+                            <td class="text-center">
+                                <div class="form-check form-switch d-flex justify-content-center">
+                                    <input class="form-check-input" type="checkbox" name="[${index}].Presente" value="true" checked />
+                                    <input type="hidden" name="[${index}].Presente" value="false" />
+                                </div>
+                            </td>
+                        `;
+                        tr.innerHTML = html;
+                        tbody.appendChild(tr);
+                    });
+                    
+                    // Update hidden dates if user changes date
+                    document.getElementById("DataAula").addEventListener('change', function() {
+                         var inputs = document.querySelectorAll(".data-aula-hidden");
+                         inputs.forEach(input => input.value = this.value);
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    tbody.innerHTML = '<tr><td colspan="2" class="text-center text-danger">Erro ao carregar alunos.</td></tr>';
+                    Swal.fire('Erro', 'Não foi possível carregar a lista de alunos.', 'error');
+                });
+        }
+    </script>
+}

@@ -18,5 +18,6 @@ namespace EduManager.Models.Entities.Interfaces
         Task AtualizarAsync(AlunoDominio aluno);
         Task RemoverAsync(int id);
         Task<bool> ExisteAsync(int id);
+        Task<int> ContarAlunosPorProfessorAsync(int professorId);
     }
 }
