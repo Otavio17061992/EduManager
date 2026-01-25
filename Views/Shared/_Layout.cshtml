@@ -26,7 +26,22 @@
                         <div class="offcanvas-body">
                             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Home" asp-action="Index"><i class="bi bi-house"></i> Home</a>
+                                    @if (User.IsInRole("Master"))
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index"><i class="bi bi-house"></i> Home</a>
+                                    }
+                                    else if (User.IsInRole("Professor"))
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Professor" asp-action="Dashboard"><i class="bi bi-house"></i> Home</a>
+                                    }
+                                    else if (User.IsInRole("Aluno"))
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Aluno" asp-action="Home"><i class="bi bi-house"></i> Home</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-house"></i> Home</a>
+                                    }
                                 </li>
 
                                 @if (User.IsInRole("Master"))
@@ -45,7 +60,24 @@
                         </div>
                     </div>
 
-                    <div><a class="navbar-brand" asp-controller="Home" asp-action="Index">EduManager</a></div>
+                    <div>
+                        @if (User.IsInRole("Master"))
+                        {
+                            <a class="navbar-brand" asp-controller="Admin" asp-action="Index">EduManager</a>
+                        }
+                        else if (User.IsInRole("Professor"))
+                        {
+                            <a class="navbar-brand" asp-controller="Professor" asp-action="Dashboard">EduManager</a>
+                        }
+                        else if (User.IsInRole("Aluno"))
+                        {
+                            <a class="navbar-brand" asp-controller="Aluno" asp-action="Home">EduManager</a>
+                        }
+                        else
+                        {
+                            <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">EduManager</a>
+                        }
+                    </div>
                 </div>
             </nav>
         </header>

@@ -4,6 +4,7 @@ using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduManager.Migrations
 {
     [DbContext(typeof(EduManagerContext))]
-    partial class EduManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20260125070603_SeedInitialData")]
+    partial class SeedInitialData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -368,35 +371,6 @@ namespace EduManager.Migrations
                     b.HasIndex("ProfessorId");
 
                     b.ToTable("Disciplinas", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            DisciplinaId = 1,
-                            CargaHoraria = 0,
-                            Codigo = "POO101",
-                            CursoId = 1,
-                            Nome = "Programação Orientada a Objetos",
-                            ProfessorId = 1
-                        },
-                        new
-                        {
-                            DisciplinaId = 2,
-                            CargaHoraria = 0,
-                            Codigo = "BD201",
-                            CursoId = 1,
-                            Nome = "Banco de Dados",
-                            ProfessorId = 2
-                        },
-                        new
-                        {
-                            DisciplinaId = 3,
-                            CargaHoraria = 0,
-                            Codigo = "ALG101",
-                            CursoId = 2,
-                            Nome = "Algoritmos",
-                            ProfessorId = 1
-                        });
                 });
 
             modelBuilder.Entity("EduManager.Models.Entities.Dominios.FrequenciaDominio", b =>
@@ -431,35 +405,6 @@ namespace EduManager.Migrations
                     b.HasIndex("TurmaId");
 
                     b.ToTable("Frequencias", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            FrequenciaId = 1,
-                            AlunoId = 1,
-                            DataAula = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 1,
-                            Presente = true,
-                            TurmaId = 1
-                        },
-                        new
-                        {
-                            FrequenciaId = 2,
-                            AlunoId = 2,
-                            DataAula = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 2,
-                            Presente = false,
-                            TurmaId = 2
-                        },
-                        new
-                        {
-                            FrequenciaId = 3,
-                            AlunoId = 3,
-                            DataAula = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 1,
-                            Presente = true,
-                            TurmaId = 1
-                        });
                 });
 
             modelBuilder.Entity("EduManager.Models.Entities.Dominios.NotaDominio", b =>
@@ -494,35 +439,6 @@ namespace EduManager.Migrations
                     b.HasIndex("DisciplinaId");
 
                     b.ToTable("Notas", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            NotaId = 1,
-                            AlunoId = 1,
-                            DataAvaliacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 1,
-                            TipoAvaliacao = "Prova 1",
-                            Valor = 8.5m
-                        },
-                        new
-                        {
-                            NotaId = 2,
-                            AlunoId = 2,
-                            DataAvaliacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 2,
-                            TipoAvaliacao = "Prova 1",
-                            Valor = 9.0m
-                        },
-                        new
-                        {
-                            NotaId = 3,
-                            AlunoId = 3,
-                            DataAvaliacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 1,
-                            TipoAvaliacao = "Prova 1",
-                            Valor = 7.5m
-                        });
                 });
 
             modelBuilder.Entity("EduManager.Models.Entities.Dominios.ProfessorDominio", b =>
@@ -637,47 +553,6 @@ namespace EduManager.Migrations
                     b.HasIndex("ProfessorId");
 
                     b.ToTable("Turmas", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            TurmaId = 1,
-                            Ano = "2023",
-                            Ativa = true,
-                            CursoId = 1,
-                            DataFim = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataInicio = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 1,
-                            Nome = "Turma A - POO",
-                            ProfessorId = 1,
-                            Semestre = 0
-                        },
-                        new
-                        {
-                            TurmaId = 2,
-                            Ano = "2023",
-                            Ativa = true,
-                            CursoId = 1,
-                            DataFim = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataInicio = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 2,
-                            Nome = "Turma B - BD",
-                            ProfessorId = 2,
-                            Semestre = 0
-                        },
-                        new
-                        {
-                            TurmaId = 3,
-                            Ano = "2023",
-                            Ativa = true,
-                            CursoId = 2,
-                            DataFim = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataInicio = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisciplinaId = 3,
-                            Nome = "Turma A - Alg",
-                            ProfessorId = 1,
-                            Semestre = 0
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

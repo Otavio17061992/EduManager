@@ -37,6 +37,8 @@ public class EduManagerContext : IdentityDbContext<ApplicationUser>
         ConfigurarNota(modelBuilder);
         ConfigurarFrequencia(modelBuilder);
         ConfigurarUser(modelBuilder);
+
+        modelBuilder.Seed();
     }
 
     private void ConfigurarApplicationUser(ModelBuilder modelBuilder)

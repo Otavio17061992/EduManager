@@ -46,6 +46,7 @@ public class AlunoMetodos : IAlunosRepository
     public async Task<AlunoDominio?> ObterPorIdAsync(int id)
     {
         return await _context.Aluno
+            .Include(a => a.Curso)
             .FirstOrDefaultAsync(a => a.AlunoId == id);
     }
 

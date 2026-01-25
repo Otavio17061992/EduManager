@@ -12,8 +12,10 @@ builder.Services.AddDbContext<EduManagerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<EduManager.Models.Entities.Metodos.AccountMetodos>();
+builder.Services.AddScoped<EduManager.Models.Entities.Metodos.AlunoMetodos>();
 
 builder.Services.AddScoped<IAccountRepository, AccountMetodos>();
+builder.Services.AddScoped<IAlunosRepository, AlunoMetodos>();
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 

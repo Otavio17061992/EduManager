@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Configurações do Sistema";
+}
+
+<div class="container-fluid pb-5">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h2">Configurações do Sistema</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Voltar ao Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Configurações Gerais</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nomeEscola" class="form-label">Nome da Escola</label>
+                            <input type="text" class="form-control" id="nomeEscola" value="EduManager School">
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailContato" class="form-label">Email de Contato</label>
+                            <input type="email" class="form-control" id="emailContato" value="contato@edumanager.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefone" class="form-label">Telefone</label>
+                            <input type="text" class="form-control" id="telefone" value="(11) 1234-5678">
+                        </div>
+                        <div class="mb-3">
+                            <label for="endereco" class="form-label">Endereço</label>
+                            <textarea class="form-control" id="endereco" rows="3">Rua Exemplo, 123 - Cidade, Estado</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Outras Configurações</h5>
+                </div>
+                <div class="card-body">
+                    <p>vou implementar depois temas, notificações, etc.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

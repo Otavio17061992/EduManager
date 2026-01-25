@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Gerenciar Permissões";
+}
+
+<div class="container-fluid pb-5">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h2">Gerenciar Permissões</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Voltar ao Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Usuários e suas Permissões</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Permissão Atual</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- hardcoded por enquanto -->
+                            <tr>
+                                <td>João Silva</td>
+                                <td>joao@exemplo.com</td>
+                                <td>Aluno</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Alterar Permissão</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Maria Oliveira</td>
+                                <td>maria@exemplo.com</td>
+                                <td>Professor</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Alterar Permissão</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Admin Master</td>
+                                <td>admin@edumanager.com</td>
+                                <td>Master</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Alterar Permissão</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
