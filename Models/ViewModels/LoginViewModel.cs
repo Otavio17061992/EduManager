@@ -12,7 +12,7 @@ public class LoginViewModel
         [EmailAddress(ErrorMessage = "Formato de Email inválido.")]
         public string? Email { get; set; }
 
-                [Required(ErrorMessage = "A Senha é obrigatória.")]
+        [Required(ErrorMessage = "A Senha é obrigatória.")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
 

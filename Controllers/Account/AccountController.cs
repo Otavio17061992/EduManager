@@ -2,26 +2,21 @@ using EduManager.InfraEstrutura.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using EduManager.Models.ViewModels;
-using EduManager.Models.Entities.Dominios; 
+using EduManager.Models.Entities.Dominios;
+using System.Threading.Tasks;
+using EduManager.Models.Entities.Metodos;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace EduManager.Controllers.Login
 {
     public class AccountController : Controller
     {
-        private readonly ILogger<AccountController> _logger;
-        private readonly UserManager<ApplicationUser> _userManager; 
-        private readonly SignInManager<ApplicationUser> _signInManager; 
+        private readonly AccountMetodos _accountMetodos;
 
-
-        public AccountController(
-            ILogger<AccountController> logger,
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager) 
+        public AccountController(AccountMetodos accountMetodos)
         {
-            _logger = logger;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _accountMetodos = accountMetodos;
         }
 
         [HttpGet]
@@ -37,11 +32,16 @@ namespace EduManager.Controllers.Login
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            // limpa o cookie de autenticação
-            _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            var result = await _accountMetodos.SignOutAsync();
+
+            if (result)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult ForgotPassword()
@@ -58,41 +58,27 @@ namespace EduManager.Controllers.Login
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            var result = await _accountMetodos.Login(model);
+
+            if (result.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email!);
-                
-                if (user == null)
-                {
-                    _logger.LogWarning("Usuário não encontrado.");
-                }
-                else
-                {
-                    //var novoHash = _userManager.PasswordHasher.HashPassword(user, model.Password!);
-                    //Console.WriteLine($"O hash correto para a senha digitada é: {novoHash}");
-
-                    var passwordCheck = await _signInManager.CheckPasswordSignInAsync(user, model.Password!, false);
-                    Console.WriteLine(passwordCheck);
-                    
-                    if (!passwordCheck.Succeeded)
-                    {
-                        _logger.LogWarning($"Falha: Locked={passwordCheck.IsLockedOut}, NotAllowed={passwordCheck.IsNotAllowed}");
-                    }
-                }
-
-                var result = await _signInManager.PasswordSignInAsync(model.Email!, model.Password!, false, false);
-                
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("Usuário logado com sucesso.");
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    _logger.LogWarning("Tentativa de login inválida.");
-                    ModelState.AddModelError(string.Empty, "Tentativa de login inválida.");
-                }
+                return RedirectToAction("Index","Home");
             }
+
+            if(result.IsLockedOut)
+            {
+                ModelState.AddModelError("","Esta conta está temporariamente bloqueada.");
+                return View(model);
+            }
+
+            if(result.RequiresTwoFactor)
+            {
+                return RedirectToAction("LoginWith2fa");
+            }
+
+            ModelState.TryAddModelError(string.Empty,"E-mail ou senha inválidos.");
             return View(model);
         }
 
@@ -103,47 +89,40 @@ namespace EduManager.Controllers.Login
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> VerifyCpf([FromBody] string cpf)
+        public async Task<IActionResult> VerifyCpf([FromBody] CpfRequest request)
         {
-            if (string.IsNullOrEmpty(cpf))
-                return Json(new { success = false, message = "CPF não informado." });
-
-            var cleanCpf = new string(cpf.Where(char.IsDigit).ToArray());
-
-            var user = _userManager.Users.FirstOrDefault(u => u.CPF == cleanCpf);
-
-            if (user != null)
+            if(request == null || string.IsNullOrEmpty(request.Cpf))
             {
-                return Json(new { success = true });
+                return Json(new {sucess = false, message = "CPF não informado"});
             }
-            
-            return Json(new { success = false, message = "CPF não encontrado." });
+
+
+            bool exists = await _accountMetodos.VerifyCpfAsync(request.Cpf);
+
+            if(exists)
+            {
+                return Json(new {sucess = true, message = "CPF já cadastrado."});
+            }
+
+            return Json(new {sucess = false, message = "CPF disponivel ou não encontradao"});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPasswordByCpf([FromBody] ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPasswordByCpf([FromBody] ResetPasswordRequest model)
         {
-            if (string.IsNullOrEmpty(request.Cpf) || string.IsNullOrEmpty(request.NewPassword))
-                return Json(new { success = false, message = "Dados incompletos." });
+            if(!ModelState.IsValid)
+                return Json(new {sucess = false, message = "Dados inválidos."});
 
-            var cleanCpf = new string(request.Cpf.Where(char.IsDigit).ToArray());
-            var user = _userManager.Users.FirstOrDefault(u => u.CPF == cleanCpf);
+            var result = await _accountMetodos.ResetPasswordByCpf(model.Cpf, model.NewPassword);
 
-            if (user == null)
-                return Json(new { success = false, message = "Usuário não encontrado." });
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
-
-            if (result.Succeeded)
+            if(result.Succeeded)
             {
-                return Json(new { success = true });
+                return Json(new {sucess = true, message = "Senha redefinida com sucesso"});
             }
 
-            return Json(new { success = false, message = "Erro ao redefinir senha." });
+            var error = result.Errors.FirstOrDefault()?.Description ?? "Erro ao redefinir senha.";
+            return Json(new { success = false, message = error });
         }
-
     }
 }

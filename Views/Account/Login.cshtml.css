@@ -57,7 +57,7 @@
   box-shadow: 0 4px 10px rgba(0, 123, 255, 0.5);
 }
 
-/* Efeito de onda ao clicar (opcional, mas moderno) */
+/* Efeito de onda ao clicar  */
 .login-btn-animated::after {
   content: "";
   position: absolute;
