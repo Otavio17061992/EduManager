@@ -118,7 +118,7 @@
                 'Content-Type': 'application/json',
                 'RequestVerificationToken': token
             },
-            body: JSON.stringify(cpf)
+            body: JSON.stringify({ cpf: cpf })
         })
             .then(response => response.json())
             .then(data => {
@@ -149,17 +149,15 @@
         const btn = this;
         const errorDiv = document.getElementById('passwordError');
 
-        document.getElementById('confirmPassword').classList.remove('is-invalid');
-
         if (!pass || pass.length < 6) {
             errorDiv.textContent = "A senha deve ter no mínimo 6 caracteres.";
-            document.getElementById('confirmPassword').classList.add('is-invalid');
+            errorDiv.style.display = "block"; // Garante que apareça
             return;
         }
 
         if (pass !== confirm) {
             errorDiv.textContent = "As senhas não conferem.";
-            document.getElementById('confirmPassword').classList.add('is-invalid');
+            errorDiv.style.display = "block";
             return;
         }
 
@@ -175,23 +173,29 @@
             },
             body: JSON.stringify({ cpf: cpf, newPassword: pass })
         })
-            .then(response => response.json())
-            .then(data => {
-                btn.disabled = false;
-                btn.textContent = "Salvar Nova Senha";
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.textContent = "Salvar Nova Senha";
 
-                if (data.success) {
-                    alert('Senha alterada com sucesso! Você pode fazer login agora.');
+            if (data.success) {
+                // Em vez de alert, vamos mudar o texto do modal e fechar depois de 2 segundos
+                const modalBody = document.querySelector('#forgotPasswordModal .modal-body');
+                modalBody.innerHTML = '<div class="alert alert-success">Senha alterada com sucesso! Recarregando...</div>';
+                
+                setTimeout(() => {
                     window.location.reload();
-                } else {
-                    alert('Erro: ' + data.message);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                btn.disabled = false;
-                alert('Erro ao redefinir senha.');
-            });
+                }, 1500);
+            } else {
+                errorDiv.textContent = data.message;
+                errorDiv.style.display = "block";
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            errorDiv.textContent = "Erro de conexão com o servidor.";
+            errorDiv.style.display = "block";
+        });
     });
 
     // Clear invalid verification on input

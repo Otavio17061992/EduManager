@@ -2,12 +2,18 @@ using EduManager.InfraEstrutura.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using EduManager.Models.Entities.Dominios;
+using EduManager.Models.Entities.Interfaces;
+using EduManager.Models.Entities.Metodos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configuração do DbContext
 builder.Services.AddDbContext<EduManagerContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<EduManager.Models.Entities.Metodos.AccountMetodos>();
+
+builder.Services.AddScoped<IAccountRepository, AccountMetodos>();
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 

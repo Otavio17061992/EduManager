@@ -6,20 +6,26 @@ using EduManager.Models.Entities.Dominios;
 using System.Threading.Tasks;
 using EduManager.Models.Entities.Metodos;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace EduManager.Controllers.Login
 {
+    [Authorize(Roles = "AdminMaster")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly AccountMetodos _accountMetodos;
+        private readonly UserManager<ApplicationUser> _userManager; 
 
-        public AccountController(AccountMetodos accountMetodos)
+        public AccountController(AccountMetodos accountMetodos, UserManager<ApplicationUser> userManager)
         {
             _accountMetodos = accountMetodos;
+            _userManager = userManager; 
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
@@ -64,7 +70,22 @@ namespace EduManager.Controllers.Login
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index","Home");
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                    
+                if (await _userManager.IsInRoleAsync(user, "Master"))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else if (await _userManager.IsInRoleAsync(user, "Professor"))
+                {
+                    return RedirectToAction("Dashboard", "Professor");
+                }
+                else if (await _userManager.IsInRoleAsync(user, "Aluno"))
+                {
+                    return RedirectToAction("Home", "Aluno");
+                }
+
+                return RedirectToAction("Index", "Home");
             }
 
             if(result.IsLockedOut)
@@ -87,24 +108,25 @@ namespace EduManager.Controllers.Login
         {
             return View("Error!");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyCpf([FromBody] CpfRequest request)
         {
             if(request == null || string.IsNullOrEmpty(request.Cpf))
             {
-                return Json(new {sucess = false, message = "CPF não informado"});
+                return Json(new { success = false, message = "CPF não informado" });
             }
 
-
-            bool exists = await _accountMetodos.VerifyCpfAsync(request.Cpf);
+            var cleanCpf = request.Cpf.Replace(".", "").Replace("-", "");
+            bool exists = await _accountMetodos.VerifyCpfAsync(cleanCpf);
 
             if(exists)
             {
-                return Json(new {sucess = true, message = "CPF já cadastrado."});
+                return Json(new { success = true, message = "Usuário encontrado! Defina sua nova senha." });
             }
 
-            return Json(new {sucess = false, message = "CPF disponivel ou não encontradao"});
+            return Json(new { success = false, message = "CPF não encontrado em nossa base." });
         }
 
         [HttpPost]
@@ -112,13 +134,13 @@ namespace EduManager.Controllers.Login
         public async Task<IActionResult> ResetPasswordByCpf([FromBody] ResetPasswordRequest model)
         {
             if(!ModelState.IsValid)
-                return Json(new {sucess = false, message = "Dados inválidos."});
+                return Json(new { success = false, message = "Dados inválidos." }); 
 
             var result = await _accountMetodos.ResetPasswordByCpf(model.Cpf, model.NewPassword);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
-                return Json(new {sucess = true, message = "Senha redefinida com sucesso"});
+                return Json(new { success = true, message = "Senha redefinida com sucesso" });
             }
 
             var error = result.Errors.FirstOrDefault()?.Description ?? "Erro ao redefinir senha.";
