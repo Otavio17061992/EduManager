@@ -1,0 +1,59 @@
+@model IEnumerable<EduManager.Models.Entities.Dominios.AlunoDominio>
+
+@{
+    ViewData["Title"] = "Meus Alunos";
+}
+
+<div class="container-fluid pb-5">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h2">Meus Alunos</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="@Url.Action("Dashboard", "Professor")" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                                    <span class="fs-4 fw-bold text-primary">@item.AlunoNomeCompleto?.FirstOrDefault()</span>
+                                </div>
+                            </div>
+                            <h5 class="card-title fw-bold mb-1">@item.AlunoNomeCompleto</h5>
+                            <p class="text-muted small mb-3">@item.AlunoEmail</p>
+                            <span class="badge bg-light text-dark mb-3">@item.Curso?.CursoNome</span>
+                            
+                            <div class="d-flex justify-content-center gap-2">
+                                <button class="btn btn-sm btn-outline-primary" title="Ver Perfil">
+                                    <i class="bi bi-person"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" title="Notas">
+                                    <i class="bi bi-graph-up"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" title="Frequência">
+                                    <i class="bi bi-calendar-check"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle me-2"></i> Nenhum aluno encontrado nas suas turmas.
+                </div>
+            </div>
+        }
+    </div>
+</div>
